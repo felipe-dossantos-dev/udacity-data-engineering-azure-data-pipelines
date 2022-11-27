@@ -169,13 +169,13 @@ resource dataFactoryLinkedSynapse 'Microsoft.DataFactory/factories/linkedservice
 
 resource dataSetInCsvPayroll 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'in-csv-nycpayroll'
+  name: 'in_csv_nycpayroll'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedBlob.name
       type: 'LinkedServiceReference'
     }
-    type: 'Binary'
+    type: 'DelimitedText'
     typeProperties: {
       location: {
         type: 'AzureBlobStorageLocation'
@@ -183,19 +183,21 @@ resource dataSetInCsvPayroll 'Microsoft.DataFactory/factories/datasets@2018-06-0
         folderPath: 'dirpayrollfiles'
         fileName: 'nycpayroll_2021.csv'
       }
+      columnDelimiter: ','
+      firstRowAsHeader: true
     }
   }
 }
 
 resource dataSetInCsvTitleMaster 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'in-csv-title-master'
+  name: 'in_csv_title_master'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedBlob.name
       type: 'LinkedServiceReference'
     }
-    type: 'Binary'
+    type: 'DelimitedText'
     typeProperties: {
       location: {
         type: 'AzureBlobStorageLocation'
@@ -203,19 +205,21 @@ resource dataSetInCsvTitleMaster 'Microsoft.DataFactory/factories/datasets@2018-
         folderPath: 'dirpayrollfiles'
         fileName: 'TitleMaster.csv'
       }
+      columnDelimiter: ','
+      firstRowAsHeader: true
     }
   }
 }
 
 resource dataSetInCsvEmpMaster 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'in-csv-emp-master'
+  name: 'in_csv_emp_master'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedBlob.name
       type: 'LinkedServiceReference'
     }
-    type: 'Binary'
+    type: 'DelimitedText'
     typeProperties: {
       location: {
         type: 'AzureBlobStorageLocation'
@@ -223,19 +227,21 @@ resource dataSetInCsvEmpMaster 'Microsoft.DataFactory/factories/datasets@2018-06
         folderPath: 'dirpayrollfiles'
         fileName: 'EmpMaster.csv'
       }
+      columnDelimiter: ','
+      firstRowAsHeader: true
     }
   }
 }
 
 resource dataSetInCsvAgencyMaster 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'in-csv-agency-master'
+  name: 'in_csv_agency_master'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedBlob.name
       type: 'LinkedServiceReference'
     }
-    type: 'Binary'
+    type: 'DelimitedText'
     typeProperties: {
       location: {
         type: 'AzureBlobStorageLocation'
@@ -243,13 +249,15 @@ resource dataSetInCsvAgencyMaster 'Microsoft.DataFactory/factories/datasets@2018
         folderPath: 'dirpayrollfiles'
         fileName: 'AgencyMaster.csv'
       }
+      columnDelimiter: ','
+      firstRowAsHeader: true
     }
   }
 }
 
 resource dataSetOutTransctionalSql 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'ds-sql-payroll-data'
+  name: 'ds_sql_payroll_data'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedSql.name
@@ -257,15 +265,14 @@ resource dataSetOutTransctionalSql 'Microsoft.DataFactory/factories/datasets@201
     }
     type:'AzureSqlTable'
     typeProperties:{
-      schema: 'dbo'
-      table: 'NYC_Payroll_Data'
+      tableName: '[dbo].[NYC_Payroll_Data]'
     }
   }
 }
 
 resource dataSetOutSynapseEmp 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'out-synapse-emp-md'
+  name: 'out_synapse_emp_md'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedSynapse.name
@@ -273,15 +280,14 @@ resource dataSetOutSynapseEmp 'Microsoft.DataFactory/factories/datasets@2018-06-
     }
     type:'AzureSqlDWTable'
     typeProperties:{
-      schema: 'dbo'
-      table: 'NYC_Payroll_EMP_MD'
+      tableName: '[dbo].[NYC_Payroll_EMP_MD]'
     }
   }
 }
-
+           
 resource dataSetOutSynapseTitle 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'out-synapse-title-md'
+  name: 'out_synapse_title_md'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedSynapse.name
@@ -289,15 +295,14 @@ resource dataSetOutSynapseTitle 'Microsoft.DataFactory/factories/datasets@2018-0
     }
     type:'AzureSqlDWTable'
     typeProperties:{
-      schema: 'dbo'
-      table: 'NYC_Payroll_TITLE_MD'
+      tableName: '[dbo].[NYC_Payroll_TITLE_MD]'
     }
   }
 }
 
 resource dataSetOutSynapseAgency 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'out-synapse-agency-md'
+  name: 'out_synapse_agency_md'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedSynapse.name
@@ -305,15 +310,14 @@ resource dataSetOutSynapseAgency 'Microsoft.DataFactory/factories/datasets@2018-
     }
     type:'AzureSqlDWTable'
     typeProperties:{
-      schema: 'dbo'
-      table: 'NYC_Payroll_AGENCY_MD'
+      tableName: '[dbo].[NYC_Payroll_AGENCY_MD]'
     }
   }
 }
 
 resource dataSetOutSynapsePayroll 'Microsoft.DataFactory/factories/datasets@2018-06-01' = {
   parent: dataFactory
-  name: 'out-synapse-payroll-md'
+  name: 'out_synapse_payroll_md'
   properties: {
     linkedServiceName: {
       referenceName: dataFactoryLinkedSynapse.name
@@ -321,8 +325,19 @@ resource dataSetOutSynapsePayroll 'Microsoft.DataFactory/factories/datasets@2018
     }
     type:'AzureSqlDWTable'
     typeProperties:{
-      schema: 'dbo'
-      table: 'NYC_Payroll_Data'
+      tableName: '[dbo].[NYC_Payroll_Data]'
     }
   }
 }
+
+
+// resource dataFlowTest 'Microsoft.DataFactory/factories/dataflows@2018-06-01' = {
+//   parent: dataFactory
+//   name: 'df-insert-transactional'
+//   properties: {
+//     type: 'MappingDataFlow'
+//     typeProperties: {
+      
+//     }
+//   }
+// }
